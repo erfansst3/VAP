@@ -78,7 +78,7 @@ return blockedDirs;
 }
 function findSpawnPoints(){
 const pts=[];for(let x=mapBounds.minX+4;x<mapBounds.maxX-4;x+=3.5)for(let z=mapBounds.minZ+4;z<mapBounds.maxZ-4;z+=3.5){const g=groundAt(x,z);if(!g||g.y>1.65)continue;const walls=wallClear(x,z,g.y);if(walls>3)continue;const edge=Math.min(x-mapBounds.minX,mapBounds.maxX-x,z-mapBounds.minZ,mapBounds.maxZ-z);pts.push({...g,score:Math.abs(edge-8)+Math.abs(g.y)*2+Math.abs(walls-2)*1.4})}
-pts.sort((a,b)=>a.score-b.score);return pts
+if(!pts.length){for(let x=mapBounds.minX+3;x<mapBounds.maxX-3;x+=3.5)for(let z=mapBounds.minZ+3;z<mapBounds.maxZ-3;z+=3.5){const g=groundAt(x,z);if(g)pts.push({...g,score:Math.abs(g.y)*3+Math.abs(x)*.01})}}pts.sort((a,b)=>a.score-b.score);return pts
 }
 function chooseSpawn(){
 const safe=spawnPoints.filter(p=>Math.hypot(p.x-player.x,p.z-player.z)>13&&bots.every(b=>!b.alive||Math.hypot(p.x-b.root.position.x,p.z-b.root.position.z)>8));const list=safe.length?safe:spawnPoints;return list[Math.floor(Math.random()*Math.max(1,list.length))]||{x:0,z:0,y:0}
